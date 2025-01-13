@@ -1,0 +1,2 @@
+g++ main.cpp -o main -lfreeglut -lopengl32 -lglu32
+main
