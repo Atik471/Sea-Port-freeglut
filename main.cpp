@@ -12,24 +12,18 @@ using namespace std;
 	*/
 
 
-/*float _move= 0.0f;
-float _moveReverse = 0.0f;
+float moveWave = 0.0f;
 
 void update(int value) {
-    _move += 5.0f;
-    _moveReverse -= 1.f;
+    moveWave += 5.0f;
 
-    if (_move > 800) {
-        _move = -120.0f;
+    if (moveWave > 1400) {
+        moveWave = -300.0f;
     }
-
-    if (_moveReverse < -500) {
-        _moveReverse = 800.0f;
-    }
-
+	
     glutPostRedisplay();
     glutTimerFunc(20, update, 0);
-}*/
+}
 
 void drawWater()
 {
@@ -168,7 +162,11 @@ void display()
 	drawWater();
 	drawLand();
 	
+	glPushMatrix();
+    glTranslatef(moveWave, 0.0f, 0.0f);
 	drawWave(25, 60, 100, "dark");
+	glPopMatrix();
+	
 	drawWave(185, 95, 200, "light");
 	drawWave(1100, 25, 200, "dark");
 	drawWave(225, 30, 100, "dark");
@@ -177,7 +175,6 @@ void display()
 	drawWave(400, 35, 350, "dark");
 	
 	drawBgBuildings();
-	
 	
 	drawContainer(300, 230, "p");
 	drawContainer(400, 230, "y");
@@ -200,7 +197,8 @@ void display()
 	drawContainer(1300, 280, "p");
 	drawContainer(1100, 330, "r");
 	
-    glFlush();
+	//glutSwapBuffers();
+	glFlush();
 }
 
 void myInit(void)
@@ -220,7 +218,7 @@ int main(int argc, char** argv) {
     myInit();
 
     glutDisplayFunc(display);
-    //glutTimerFunc(10, update, 0);
+    glutTimerFunc(10, update, 0);
 
     glutMainLoop();
 
