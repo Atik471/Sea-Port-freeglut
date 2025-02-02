@@ -11,15 +11,29 @@ float moveWave2 = 0.0f;
 float moveCloud1 = 0.0f;
 float moveCloud2 = 0.0f;
 float moveShip = -1150.0f;
-float moveWave_factor = 3.0f;
+float movePirateShip = 1400.0f;
+float moveWave_factor = 0.5f;
 float moveCloud_factor = 1.0f;
 float moveShip_factor = 2.0f;
+float movePirateShip_factor = -2.0f;
 float moveBird_factor = 2.0f;
+
+bool liftContainer = false;
+float moveContainer = 0.0f;
+float moveContainer_factor = 0.5f;
+
+float hookLength = 345;
+bool hookLength_change = false;
+float hookLength_changeFactor = 0.5f;
 
 bool night = false;
 float starSize = 2.0f;
 float starSize1 = 4.0f;
-float birdmove= 0.0f;
+float birdmove1= 0.0f;
+float birdmove2= 0.0f;
+float birdmove3= 0.0f;
+float birdmove4= 0.0f;
+float birdmove5= 0.0f;
 
 //0 none, 1 black, 2 light yellow, 3 white, 4 dark yellow, 5 dark white, 6 red, 7 darker yellow
 char bird[12][18] = {"00000011111100000",
@@ -56,34 +70,95 @@ char batmanLogo[20][32] = {"0000000000111111111110000000000",
                      "0000000111112222222111110000000",
                      "0000000000111111111110000000000"};
 
+char pirate[14][18] = {"01100000000000110",
+                     "11100000000000111",
+                     "11110011111001111",
+                     "00110111111101100",
+                     "00001111111110000",
+                     "00001001110010000",
+                     "00001001110010000",
+                     "00001111011110000",
+                     "00001110001110000",
+                     "00000011111000000",
+                     "00011010001011000",
+                     "01111011111011110",
+                     "01110001110001110",
+                     "00110000000001100"};
+
 void update(int value) {
     moveWave += moveWave_factor;
     moveWave2 += moveWave_factor;
     moveCloud1 += moveCloud_factor;
     moveCloud2 += moveCloud_factor;
     moveShip += moveShip_factor;
-    birdmove += moveBird_factor;
+    birdmove1 += moveBird_factor;
+    birdmove2 += moveBird_factor;
+    birdmove3 += moveBird_factor;
+    birdmove4 += moveBird_factor;
+    birdmove5 += moveBird_factor;
+    movePirateShip += movePirateShip_factor;
+
+    if(liftContainer)
+    {
+        if(night == false) moveContainer += moveContainer_factor;
+    }
+    if(hookLength < 345-135 && liftContainer == false)
+    {
+        hookLength_change = false;
+        liftContainer = true;
+    }
+    if(hookLength_change == true)
+    {
+        if(night == false) hookLength -= hookLength_changeFactor;
+    }
+    if(moveShip > 80 && hookLength > 345-135 && liftContainer == false)
+    {
+        moveShip_factor = 0.0f;
+        hookLength_change = true;
+    }
+    if (moveShip > 80 && liftContainer)
+    {
+        if(hookLength < 345 && night == false) hookLength += hookLength_changeFactor;
+    }
+    if (moveContainer > 125)
+    {
+        moveContainer_factor = 0.0f;
+    }
+
+    if(movePirateShip < -1400)
+    {
+        movePirateShip = 1400;
+    }
 
     if (moveWave > 1400) {
-        moveWave = -1050.0f;
+        moveWave = -1400.0f;
     }
-    if (moveWave2 > 700) {
-        moveWave2 = -1300.0f;
-    }
-    if (moveCloud1 > 1300) {
-        moveCloud1 = -700.0f;
-    }
-    if (moveCloud2 > 600) {
-        moveCloud2 = -1200.0f;
-    }
-    if(moveShip > 800)
-    {
-        moveShip = -1400.0f;
-    }
-    if (birdmove > 1400.0f) {
-        birdmove = -200.0f;
+    if (moveWave2 > 2800) {
+        moveWave2 = -2800.0f;
     }
 
+    if (moveCloud1 > 1300) {
+        moveCloud1 = -800.0f;
+    }
+    if (moveCloud2 > 600) {
+        moveCloud2 = -1300.0f;
+    }
+
+    if (birdmove1 > 1400.0f) {
+        birdmove1 = -200.0f;
+    }
+    if (birdmove2 > 900.0f) {
+        birdmove2 = -700.0f;
+    }
+    if (birdmove3 > 400.0f) {
+        birdmove3 = -1200.0f;
+    }
+    if (birdmove4 > 700.0f) {
+        birdmove4 = -900.0f;
+    }
+    if (birdmove5 > 500.0f) {
+        birdmove5 = -1100.0f;
+    }
 
     glutPostRedisplay();
     glutTimerFunc(20, update, 0);
@@ -422,12 +497,82 @@ void drawBgBuildings()
     glEnd();
 }
 
+
+void renderBitmapText(float x, float y, void* font, const char* text) {
+    if(night == true) glColor3f(0.902, 0.867, 0.149);
+    else glColor3f(1, 1, 1);
+    glRasterPos2f(x, y);
+    while (*text) {
+        glutBitmapCharacter(font, *text);
+        text++;
+    }
+}
+
 void drawPortBuilding()
 {
-    glColor3f(0.443, 0.749, 0.824);
-    glBegin(GL_POLYGON);
-
+    //base
+    glColor3f(0.427, 0.475, 0.522);
+    glBegin(GL_QUADS);
+    glVertex2f(400, 230);
+    glVertex2f(700, 230);
+    glVertex2f(700, 480);
+    glVertex2f(400, 480);
     glEnd();
+
+    //base corner
+    glColor3f(0.258, 0.263, 0.243);
+    glBegin(GL_QUADS);
+    glVertex2f(410, 230);
+    glVertex2f(690, 230);
+    glVertex2f(690, 470);
+    glVertex2f(410, 470);
+    glEnd();
+
+    //floor divider
+    glLineWidth(5);
+    for(int i=0; i<680-450; i+=48)
+    {
+        glColor3f(0.427, 0.475, 0.522);
+        glBegin(GL_LINES);
+        glVertex2f(410, 230+i);
+        glVertex2f(690, 230+i);
+        glEnd();
+    }
+
+    //windows
+    for(int i=0; i<680-450; i+=48)
+    {
+        if(night == false) glColor3f(0.443, 0.749, 0.824);
+        else glColor3f(0.902, 0.867, 0.149);
+        glBegin(GL_QUADS);
+        glVertex2f(450, 233+i);
+        glVertex2f(650, 233+i);
+        glVertex2f(650, 233+i+38);
+        glVertex2f(450, 233+i+38);
+        glEnd();
+    }
+
+    //billboard corner
+    if(night == false) glColor3f(0.035, 0.255, 0.388);
+    else glColor3f(0.902, 0.867, 0.149);
+    glBegin(GL_QUADS);
+    glVertex2f(495, 480);
+    glVertex2f(605, 480);
+    glVertex2f(605, 525);
+    glVertex2f(495, 525);
+    glEnd();
+
+    //billboard
+    if(night == false) glColor3f(0.415, 0.533, 0.6);
+    else glColor3f(0.035, 0.255, 0.388);
+    glBegin(GL_QUADS);
+    glVertex2f(500, 480);
+    glVertex2f(600, 480);
+    glVertex2f(600, 520);
+    glVertex2f(500, 520);
+    glEnd();
+
+    renderBitmapText(525.0f, 495.0f, GLUT_BITMAP_HELVETICA_18, "PORT");
 }
 
 void drawCircle(float cx, float cy, float r, int numSegments) {
@@ -627,10 +772,23 @@ void drawShip()
 	}
 
 	//add containers
-	drawContainer(680, 170, "p");
-	drawContainer(780, 170, "b");
-	drawContainer(685, 220, "r");
-	drawContainer(785, 220, "y");
+	if(night == false)
+    {
+        drawContainer(680, 170, "p");
+        drawContainer(780, 170, "y");
+        drawContainer(685, 220, "r");
+        if(liftContainer)
+        {
+            glPushMatrix();
+            glTranslatef(0.0f, moveContainer, 0.0f);
+            drawContainer(785, 220, "b");
+            glPopMatrix();
+        }
+        else
+        {
+            drawContainer(785, 220, "b");
+        }
+    }
 
 	    /*for(int i=1; i<=4 ; i++)
 	{
@@ -640,6 +798,145 @@ void drawShip()
         glVertex2f(900+10*i, 200);
 	}*/
 }
+
+void drawCurvedRectangle(float width, float height, float curveFactor) {
+    int segments = 30;
+
+    glBegin(GL_TRIANGLE_STRIP);
+    for (int i = 0; i <= segments; i++) {
+        float t = (float)i / segments;
+
+        float x1 = -width / 2 - curveFactor * sin(t * 3.14159f);
+        float y1 = -height / 2 + t * height;
+
+        float x2 = width / 2 - curveFactor * sin(t * 3.14159f);
+        float y2 = -height / 2 + t * height;
+
+        glVertex2f(x1, y1);
+        glVertex2f(x2, y2);
+    }
+    glEnd();
+}
+
+void drawPirateShip()
+{
+    // bottom of ship
+    glBegin(GL_QUADS);
+    glColor3f(0.486f, 0.294f, 0.043f);
+	glVertex2f(700, 80);
+	glVertex2f(1100, 80);
+	glVertex2f(1100, 90);
+	glVertex2f(700, 90);
+	glEnd();
+
+	//body of ship
+	glBegin(GL_QUADS);
+    glColor3f(0.192f, 0.122f, 0.032f);
+	glVertex2f(700, 90);
+	glVertex2f(1100, 90);
+	glVertex2f(1140, 150);
+	glVertex2f(660, 150);
+	glEnd();
+
+	drawContainer(760, 150, "p");
+    drawContainer(890, 150, "y");
+
+    //left sail stick
+    glLineWidth(5);
+    glBegin(GL_LINES);
+    glColor3f(0.376f, 0.243f, 0.161f);
+    glVertex2f(720, 150);
+    glVertex2f(720, 275);
+    glEnd();
+
+    //left sail
+    glColor3f(0.137f, 0.133f, 0.125f);
+	glPushMatrix();
+    glTranslatef(725, 230, 0);
+    drawCurvedRectangle(80, 80, 20);
+    glPopMatrix();
+
+    //right sail stick
+    glLineWidth(5);
+    glBegin(GL_LINES);
+    glColor3f(0.376f, 0.243f, 0.161f);
+    glVertex2f(1060, 150);
+    glVertex2f(1060, 275);
+    glEnd();
+
+    //right sail
+    glColor3f(0.137f, 0.133f, 0.125f);
+	glPushMatrix();
+    glTranslatef(1065, 230, 0);
+    drawCurvedRectangle(80, 80, 20);
+    glPopMatrix();
+
+    //middle sail stick
+    glLineWidth(5);
+    glBegin(GL_LINES);
+    glColor3f(0.376f, 0.243f, 0.161f);
+    glVertex2f(880, 150);
+    glVertex2f(880, 375);
+    glEnd();
+
+    //middle sail
+    glColor3f(0.137f, 0.133f, 0.125f);
+	glPushMatrix();
+    glTranslatef(885, 230, 0);
+    drawCurvedRectangle(110, 90, 20);
+    glPopMatrix();
+
+    glColor3f(0.137f, 0.133f, 0.125f);
+	glPushMatrix();
+    glTranslatef(885, 330, 0);
+    drawCurvedRectangle(90, 80, 20);
+    glPopMatrix();
+
+    //pirate flag
+    glPointSize(3.0f);
+    glBegin(GL_POINTS);
+    int currY = 350;
+        for(int i = 0; i < 14; i++){
+            for(int j = 0; j < 18; j++){
+                if(pirate[i][j] == '0')
+                {
+                    //skip
+                }
+                else if(pirate[i][j] == '1'){
+                    glColor3f(1.0f, 1.0f, 1.0f);
+                    glVertex2f(j*3+845, currY);
+                }
+            }
+            currY -= 3;
+        }
+    glEnd();
+
+
+    //railing part of ship
+	glBegin(GL_QUADS);
+    glColor3f(0.192f, 0.122f, 0.032f);
+	glVertex2f(660, 150);
+	glVertex2f(740, 150);
+	glVertex2f(740, 180);
+	glVertex2f(660, 180);
+	glEnd();
+
+	glBegin(GL_QUADS);
+    glColor3f(0.192f, 0.122f, 0.032f);
+	glVertex2f(1000, 150);
+	glVertex2f(1140, 150);
+	glVertex2f(1140, 180);
+	glVertex2f(1000, 180);
+	glEnd();
+
+	// round windows
+	glColor3f(0.737f, 0.701f, 0.0f);
+	for(int i=0; i<=340; i+=50)
+	{
+	    drawCircle(750+i, 130, 9, 100);
+	}
+}
+
 
 void drawStars()
 {
@@ -656,6 +953,12 @@ void drawStars()
     glVertex2f(650, 460);
     glVertex2f(750, 440);
     glVertex2f(800, 610);
+    glVertex2f(520, 700);
+    glVertex2f(640, 560);
+    glVertex2f(750, 500);
+    glVertex2f(680, 490);
+    glVertex2f(710, 470);
+    glVertex2f(850, 650);
     glEnd();
 
     glPointSize(starSize1);
@@ -670,6 +973,120 @@ void drawStars()
     glVertex2f(180, 540);
     glVertex2f(280, 510);
     glVertex2f(530, 690);
+    glVertex2f(1200, 600);
+    glVertex2f(240, 480);
+
+    glEnd();
+}
+
+void drawCrane()
+{
+    if(night == false) glColor3f(0.91, 0.87, 0.15);
+    else glColor3f(0.737, 0.702, 0.0);
+    //cross lines base
+    bool right = true;
+    glLineWidth(8);
+    glBegin(GL_LINES);
+    for(int i = 240; i<420; i+=30)
+    {
+        if(right == true)
+        {
+            glVertex2f(700, i);
+            glVertex2f(750, i+30);
+            right = false;
+        }
+        else
+        {
+           glVertex2f(750, i);
+           glVertex2f(700, i+30);
+           right = true;
+        }
+    }
+    glEnd();
+
+    //top part
+    glBegin(GL_QUADS);
+    glVertex2f(680, 420);
+    glVertex2f(770, 420);
+    glVertex2f(770, 470);
+    glVertex2f(680, 470);
+    glEnd();
+
+    //cross lines hand
+    bool up = true;
+    glLineWidth(8);
+    glBegin(GL_LINES);
+    for(int i = 770; i<950; i+=30)
+    {
+        if(up == true)
+        {
+            glVertex2f(i, 430);
+            glVertex2f(i+30, 460);
+            up = false;
+        }
+        else
+        {
+           glVertex2f(i, 460);
+           glVertex2f(i+30, 430);
+           up = true;
+        }
+    }
+    glEnd();
+
+    glLineWidth(8);
+    glBegin(GL_LINES);
+    //body
+    glVertex2f(700, 240);
+    glVertex2f(700, 420);
+    glVertex2f(750, 240);
+    glVertex2f(750, 420);
+    //hand
+    glVertex2f(770, 430);
+    glVertex2f(950, 430);
+    glVertex2f(770, 460);
+    glVertex2f(920, 460);
+
+    //hand wire left
+    glColor3f(0.18, 0.12, 0.15);
+    glVertex2f(890, 425);
+    glVertex2f(915, 370);
+    glVertex2f(940, 425);
+    glVertex2f(915, 370);
+    glEnd();
+
+    //hand wire base
+    glBegin(GL_QUADS);
+    glVertex2f(900, 370);
+    glVertex2f(930, 370);
+    glVertex2f(930, 380);
+    glVertex2f(900, 380);
+    glEnd();
+
+    //hand wire round
+    float wireRadius = 15.0f;
+    int numSegments = 30;
+
+    glBegin(GL_TRIANGLE_FAN);
+    for (int i = 0; i <= numSegments; i++) {
+        float angle = 1.0f * M_PI * i / numSegments;
+        glVertex2f(915 + wireRadius * cos(angle + M_PI * 1), 375 + wireRadius * sin(angle - M_PI * 1));
+    }
+    glEnd();
+
+    //hook
+    glBegin(GL_LINES);
+    glVertex2f(915, 375);
+    glVertex2f(915, hookLength);
+    glEnd();
+
+    //base
+    if(night == false) glColor3f(0.58, 0.58, 0.58);
+    else glColor3f(0.353, 0.310, 0.318);
+    glBegin(GL_QUADS);
+    glVertex2f(680, 230);
+    glVertex2f(770, 230);
+    glVertex2f(770, 240);
+    glVertex2f(680, 240);
     glEnd();
 }
 
@@ -680,11 +1097,6 @@ void display()
 	drawSky();
 	drawWater();
 	drawLand();
-	if(night)
-    {
-        drawBatman(600, 580, 2.0f);
-    }
-    drawBgBuildings();
 
     // draw sun moon stars
 	if(night == false)
@@ -706,7 +1118,12 @@ void display()
     }
     // end sun moon stars
 
+    if(night)
+    {
+        drawBatman(590, 580, 2.0f);
+    }
 
+    drawBgBuildings();
 
     glPushMatrix();
     glTranslatef(moveCloud1, 0.0f, 0.0f);
@@ -721,54 +1138,100 @@ void display()
     drawCloud(1200, 635, 20);
     glPopMatrix();
 
-    if(!night)
-    {
-        glPushMatrix();
-        glTranslatef(birdmove, 0.0f, 0.0f);
-        drawBird(100, 500);
-        glPopMatrix();
-    }
-
 	glPushMatrix();
     glTranslatef(moveWave, 0.0f, 0.0f);
 	drawWave(25, 60, 100, "dark");
     drawWave(185, 95, 200, "light");
     drawWave(225, 30, 100, "dark");
-    drawWave(400, 35, 350, "dark");
+    drawWave(400, 115, 350, "dark");
+    drawWave(525, 60, 100, "dark");
+    drawWave(685, 95, 200, "light");
+    drawWave(725, 30, 100, "dark");
+    drawWave(900, 35, 350, "dark");
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(moveWave2, 0.0f, 0.0f);
-    drawWave(900, 65, 250, "light");
-	drawWave(1100, 25, 200, "dark");
-	drawWave(1200, 105, 150, "dark");
+    drawWave(-900, 65, 250, "light");
+	drawWave(-1100, 25, 200, "dark");
+	drawWave(-1200, 95, 150, "dark");
+	drawWave(-100, 35, 250, "light");
+	drawWave(-300, 75, 200, "dark");
+	drawWave(-400, 105, 150, "dark");
 	glPopMatrix();
-
-	drawContainer(300, 230, "p");
-	drawContainer(400, 230, "y");
-	drawContainer(500, 230, "r");
-	drawContainer(600, 230, "b");
-	drawContainer(700, 230, "y");
-	drawContainer(800, 230, "r");
-	drawContainer(900, 230, "p");
-	drawContainer(1000, 230, "b");
-	drawContainer(1100, 230, "y");
-	drawContainer(1200, 230, "r");
-	drawContainer(1300, 230, "b");
-	drawContainer(320, 280, "r");
-	drawContainer(430, 280, "b");
-	drawContainer(580, 280, "y");
-	drawContainer(730, 280, "p");
-	drawContainer(850, 280, "y");
-	drawContainer(1050, 280, "b");
-	drawContainer(1150, 280, "y");
-	drawContainer(1300, 280, "p");
-	drawContainer(1100, 330, "r");
 
 	glPushMatrix();
-    glTranslatef(moveShip, 0.0f, 0.0f);
-	drawShip();
-	glPopMatrix();
+    glTranslatef(580, 0.0f, 0.0f);
+    drawPortBuilding();
+    glPopMatrix();
+
+	drawContainer(600, 230, "b");
+	drawContainer(700, 230, "p");
+	drawContainer(800, 230, "r");
+	drawContainer(900, 230, "p");
+    drawContainer(1200, 230, "r");
+    drawContainer(1300, 230, "b");
+	drawContainer(850, 280, "y");
+	if(night == false)
+    {
+        drawContainer(400, 230, "y");
+        drawContainer(500, 230, "r");
+        drawContainer(300, 230, "p");
+        drawContainer(1100, 230, "y");
+        drawContainer(1000, 230, "b");
+        drawContainer(1050, 280, "b");
+        drawContainer(1150, 280, "y");
+        drawContainer(1300, 280, "p");
+        drawContainer(1100, 330, "r");
+        drawContainer(320, 280, "r");
+        drawContainer(430, 280, "b");
+        drawContainer(580, 280, "y");
+        drawContainer(730, 280, "p");
+    }
+
+	drawCrane();
+
+	if (night == false)
+    {
+        glPushMatrix();
+        glTranslatef(moveShip, -50.0f, 0.0f);
+        drawShip();
+        glPopMatrix();
+    }
+    else
+    {
+        glPushMatrix();
+        glTranslatef(80, 0.0f, 0.0f);
+        drawShip();
+        glPopMatrix();
+    }
+
+    if(night)
+    {
+        glPushMatrix();
+        glScalef(0.7f, 0.7f, 1.0f);
+        glTranslatef(movePirateShip, -70.0f, 0.0f);
+        drawPirateShip();
+        glPopMatrix();
+    }
+
+    if(!night)
+    {
+        glPushMatrix();
+        glTranslatef(birdmove1, 0.0f, 0.0f);
+        drawBird(100, 500);
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(birdmove4, 0.0f, 0.0f);
+        drawBird(700, 480);
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(birdmove5, 0.0f, 0.0f);
+        drawBird(900, 520);
+        glPopMatrix();
+    }
 
 	//glutSwapBuffers();
 	glFlush();
@@ -789,19 +1252,78 @@ void keyboard(unsigned char key, int x, int y) {
             moveCloud_factor = 0.0f;
             moveShip_factor = 0.0f;
             moveBird_factor = 0.0f;
+            movePirateShip_factor = 0.0f;
             break;
         case 'S':
         case 's':
-            moveWave_factor = 5.0f;
+            moveWave_factor = 0.5f;
             moveCloud_factor = 1.0f;
             moveShip_factor = 2.0f;
             moveBird_factor = 2.0f;
+            movePirateShip_factor = -2.0f;
             break;
         case 27:
             exit(0);
             break;
     }
     glutPostRedisplay();
+}
+
+void mouseCallback(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON) {
+        if (state == GLUT_DOWN)
+        {
+            moveWave_factor = 2*0.5f;
+            moveCloud_factor = 2*1.0f;
+            if(moveShip < 80) moveShip_factor = 2*2.0f;
+            else if(moveShip > 80) moveShip_factor = 0.0f;
+            moveBird_factor = 2*2.0f;
+            if(moveContainer < 125) moveContainer_factor = 2*0.5f;
+            else if(moveContainer > 125 ) moveContainer_factor = 0.0f;
+            hookLength_changeFactor = 2*0.5f;
+            movePirateShip_factor = -2*2.0f;
+        }
+
+        else if (state == GLUT_UP)
+        {
+            moveWave_factor = 0.5f;
+            moveCloud_factor = 1.0f;
+            if(moveShip < 80) moveShip_factor = 2.0f;
+            else if(moveShip > 80) moveShip_factor = 0.0f;
+            moveBird_factor = 2.0f;
+            if(moveContainer < 125) moveContainer_factor = 0.5f;
+            else if(moveContainer > 125) moveContainer_factor = 0.0f;
+            hookLength_changeFactor = 0.5f;
+            movePirateShip_factor = -2.0f;
+        }
+    }
+    else if (button == GLUT_RIGHT_BUTTON) {
+        if (state == GLUT_DOWN)
+        {
+            moveWave_factor = 0.5*0.5f;
+            moveCloud_factor = 0.5*1.0f;
+            if(moveShip < 80) moveShip_factor = 0.5*2.0f;
+            else if(moveShip > 80) moveShip_factor = 0.0f;
+            moveBird_factor = 0.5*2.0f;
+            if(moveContainer < 125) moveContainer_factor = 0.5*0.5f;
+            else if(moveContainer > 125 ) moveContainer_factor = 0.0f;
+            hookLength_changeFactor = 0.5*0.5f;
+            movePirateShip_factor = -0.5*2.0f;
+        }
+
+        else if (state == GLUT_UP)
+        {
+            moveWave_factor = 0.5f;
+            moveCloud_factor = 1.0f;
+            if(moveShip < 80) moveShip_factor = 2.0f;
+            else if(moveShip > 80) moveShip_factor = 0.0f;
+            moveBird_factor = 2.0f;
+            if(moveContainer < 125) moveContainer_factor = 0.5f;
+            else if(moveContainer > 125 ) moveContainer_factor = 0.0f;
+            hookLength_changeFactor = 0.5f;
+            movePirateShip_factor = -2.0f;
+        }
+    }
 }
 
 void myInit(void)
@@ -813,12 +1335,14 @@ void myInit(void)
 }
 int main(int argc, char** argv) {
 
-    cout << "       Sea Port Scenery       " << endl;
-    cout << "------------------------------" << endl;
+    cout << "           Sea Port Scenery           " << endl;
+    cout << "--------------------------------------" << endl;
     cout << "Press 'N' or 'n': Transition to night" << endl;
     cout << "Press 'D' or 'd': Transition to day" << endl;
     cout << "Press space: Stop scenery" << endl;
     cout << "Press 'S' or 's': Start scenery" << endl;
+    cout << "Hold 'LEFT' Mouse: Speed 2x" << endl;
+    cout << "Hold 'RIGHT' Mouse: Speed 0.5x" << endl;
     cout << "Press Esc: Exit App" << endl;
 
     glutInit(&argc, argv);
@@ -833,6 +1357,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(10, update, 0);
     glutTimerFunc(10, updateStars, 0);
     glutKeyboardFunc(keyboard);
+    glutMouseFunc(mouseCallback);
 
     glutMainLoop();
 
