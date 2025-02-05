@@ -2,16 +2,19 @@
 #include <GL/freeglut.h>
 #include <math.h>
 #include <iostream>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
 using namespace std;
 
 const float PI = 3.1416;
+
 float moveWave = 0.0f;
 float moveWave2 = 0.0f;
 float moveCloud1 = 0.0f;
 float moveCloud2 = 0.0f;
-float moveShip = -1150.0f;
-float movePirateShip = 1400.0f;
+float moveShip = -1050.0f;
+float movePirateShip = 1000.0f;
 float moveWave_factor = 0.5f;
 float moveCloud_factor = 1.0f;
 float moveShip_factor = 2.0f;
@@ -35,6 +38,7 @@ float birdmove3= 0.0f;
 float birdmove4= 0.0f;
 float birdmove5= 0.0f;
 
+
 //0 none, 1 black, 2 light yellow, 3 white, 4 dark yellow, 5 dark white, 6 red, 7 darker yellow
 char bird[12][18] = {"00000011111100000",
                      "00001122213310000",
@@ -50,40 +54,65 @@ char bird[12][18] = {"00000011111100000",
                      "00000111110000000"};
 
 char batmanLogo[20][32] = {"0000000000111111111110000000000",
-                     "0000000111222222222221110000000",
-                     "0000011222222122212222211100000",
-                     "0001112111222111112221122111000",
-                     "0011222112222111112222112221100",
-                     "0112211112222111112222111122110",
-                     "0121111112222111112222111111210",
-                     "1121111111221111111221111111121",
-                     "1211111111111111111111111111121",
-                     "1211111111111111111111111111121",
-                     "1211111111111111111111111111121",
-                     "1211111111111111111111111111121",
-                     "1211111111111111111111111111121",
-                     "0121112222122111112212222111210",
-                     "0112212222122211122212222122110",
-                     "0011221222222221222222221221100",
-                     "0001112222222221222222222111000",
-                     "0000011122222222222222211100000",
-                     "0000000111112222222111110000000",
-                     "0000000000111111111110000000000"};
+                           "0000000111222222222221110000000",
+                           "0000011222222122212222211100000",
+                           "0001112111222111112221122111000",
+                           "0011222112222111112222112221100",
+                           "0112211112222111112222111122110",
+                           "0121111112222111112222111111210",
+                           "1121111111221111111221111111121",
+                           "1211111111111111111111111111121",
+                           "1211111111111111111111111111121",
+                           "1211111111111111111111111111121",
+                           "1211111111111111111111111111121",
+                           "1211111111111111111111111111121",
+                           "0121112222122111112212222111210",
+                           "0112212222122211122212222122110",
+                           "0011221222222221222222221221100",
+                           "0001112222222221222222222111000",
+                           "0000011122222222222222211100000",
+                           "0000000111112222222111110000000",
+                           "0000000000111111111110000000000"};
 
 char pirate[14][18] = {"01100000000000110",
-                     "11100000000000111",
-                     "11110011111001111",
-                     "00110111111101100",
-                     "00001111111110000",
-                     "00001001110010000",
-                     "00001001110010000",
-                     "00001111011110000",
-                     "00001110001110000",
-                     "00000011111000000",
-                     "00011010001011000",
-                     "01111011111011110",
-                     "01110001110001110",
-                     "00110000000001100"};
+                       "11100000000000111",
+                       "11110011111001111",
+                       "00110111111101100",
+                       "00001111111110000",
+                       "00001001110010000",
+                       "00001001110010000",
+                       "00001111011110000",
+                       "00001110001110000",
+                       "00000011111000000",
+                       "00011010001011000",
+                       "01111011111011110",
+                       "01110001110001110",
+                       "00110000000001100"};
+
+void restart()
+{
+    moveWave = 0.0f;
+    moveWave2 = 0.0f;
+    moveCloud1 = 0.0f;
+    moveCloud2 = 0.0f;
+    moveShip = -1050.0f;
+    movePirateShip = 1000.0f;
+    moveShip_factor = 2.0f;
+
+    liftContainer = false;
+    moveContainer = 0.0f;
+    moveContainer_factor = 0.5f;
+
+    hookLength = 345;
+    hookLength_change = false;
+
+    birdmove1= 0.0f;
+    birdmove2= 0.0f;
+    birdmove3= 0.0f;
+    birdmove4= 0.0f;
+    birdmove5= 0.0f;
+}
+
 
 void update(int value) {
     moveWave += moveWave_factor;
@@ -125,7 +154,7 @@ void update(int value) {
         moveContainer_factor = 0.0f;
     }
 
-    if(movePirateShip < -1400)
+    if(movePirateShip < -1200)
     {
         movePirateShip = 1400;
     }
@@ -534,8 +563,8 @@ void drawPortBuilding()
     {
         glColor3f(0.427, 0.475, 0.522);
         glBegin(GL_LINES);
-        glVertex2f(410, 230+i);
-        glVertex2f(690, 230+i);
+        glVertex2f(410, 232+i);
+        glVertex2f(690, 232+i);
         glEnd();
     }
 
@@ -545,10 +574,10 @@ void drawPortBuilding()
         if(night == false) glColor3f(0.443, 0.749, 0.824);
         else glColor3f(0.902, 0.867, 0.149);
         glBegin(GL_QUADS);
-        glVertex2f(450, 233+i);
-        glVertex2f(650, 233+i);
-        glVertex2f(650, 233+i+38);
-        glVertex2f(450, 233+i+38);
+        glVertex2f(450, 235+i);
+        glVertex2f(650, 235+i);
+        glVertex2f(650, 235+i+38);
+        glVertex2f(450, 235+i+38);
         glEnd();
     }
 
@@ -789,14 +818,6 @@ void drawShip()
             drawContainer(785, 220, "b");
         }
     }
-
-	    /*for(int i=1; i<=4 ; i++)
-	{
-	    glVertex2f(900+10*i, 180);
-        glVertex2f(900+10*i*3, 180);
-        glVertex2f(900+10*i*3, 200);
-        glVertex2f(900+10*i, 200);
-	}*/
 }
 
 void drawCurvedRectangle(float width, float height, float curveFactor) {
@@ -1237,15 +1258,27 @@ void display()
 	glFlush();
 }
 
+void playSound(const std::string& soundFile) {
+    PlaySound(soundFile.c_str(), NULL, SND_ASYNC | SND_FILENAME);
+}
+// stop sound
+void stopSound() { PlaySound(NULL, NULL, 0); }
+
+bool playing = true;
+
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
         case 'N':
         case 'n':
             night = true;
+            stopSound();
+            if(playing) playSound("pirates.wav");
             break;
         case 'D':
         case 'd':
             night = false;
+            stopSound();
+            if(playing) playSound("day-2.wav");
             break;
         case ' ':
             moveWave_factor = 0.0f;
@@ -1253,14 +1286,37 @@ void keyboard(unsigned char key, int x, int y) {
             moveShip_factor = 0.0f;
             moveBird_factor = 0.0f;
             movePirateShip_factor = 0.0f;
+            hookLength_changeFactor = 0.0f;
+            moveContainer_factor = 0.0f;
             break;
         case 'S':
         case 's':
             moveWave_factor = 0.5f;
             moveCloud_factor = 1.0f;
-            moveShip_factor = 2.0f;
+            if(moveShip < 80) moveShip_factor = 2.0f;
             moveBird_factor = 2.0f;
             movePirateShip_factor = -2.0f;
+            hookLength_changeFactor = 0.5f;
+            moveContainer_factor = 0.5f;
+            break;
+        case 'R':
+        case 'r':
+            restart();
+            break;
+        case 'M':
+        case 'm':
+            playing = !playing;
+            if(!playing) stopSound();
+            if(playing && night == false)
+            {
+                stopSound();
+                playSound("day-2.wav");
+            }
+            else if(playing && night == true)
+            {
+                stopSound();
+                playSound("pirates.wav");
+            }
             break;
         case 27:
             exit(0);
@@ -1273,15 +1329,15 @@ void mouseCallback(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON) {
         if (state == GLUT_DOWN)
         {
-            moveWave_factor = 2*0.5f;
-            moveCloud_factor = 2*1.0f;
-            if(moveShip < 80) moveShip_factor = 2*2.0f;
+            moveWave_factor = 3*0.5f;
+            moveCloud_factor = 3*1.0f;
+            if(moveShip < 80) moveShip_factor = 3*2.0f;
             else if(moveShip > 80) moveShip_factor = 0.0f;
-            moveBird_factor = 2*2.0f;
-            if(moveContainer < 125) moveContainer_factor = 2*0.5f;
+            moveBird_factor = 3*2.0f;
+            if(moveContainer < 125) moveContainer_factor = 3*0.5f;
             else if(moveContainer > 125 ) moveContainer_factor = 0.0f;
-            hookLength_changeFactor = 2*0.5f;
-            movePirateShip_factor = -2*2.0f;
+            hookLength_changeFactor = 3*0.5f;
+            movePirateShip_factor = -3*2.0f;
         }
 
         else if (state == GLUT_UP)
@@ -1335,21 +1391,34 @@ void myInit(void)
 }
 int main(int argc, char** argv) {
 
-    cout << "           Sea Port Scenery           " << endl;
-    cout << "--------------------------------------" << endl;
-    cout << "Press 'N' or 'n': Transition to night" << endl;
-    cout << "Press 'D' or 'd': Transition to day" << endl;
-    cout << "Press space: Stop scenery" << endl;
-    cout << "Press 'S' or 's': Start scenery" << endl;
-    cout << "Hold 'LEFT' Mouse: Speed 2x" << endl;
-    cout << "Hold 'RIGHT' Mouse: Speed 0.5x" << endl;
-    cout << "Press Esc: Exit App" << endl;
+    cout << endl << endl;
+    cout << ".-------------------------------------------------------------.\n";
+    cout << "|             MD. ATIKUR RAHMAN - 22-47944-2                  |\n";
+    cout << ".-------------------------------------------------------------.\n";
+    cout << "| KEY / MOUSE INPUT        | ACTION                           |\n";
+    cout << ".-------------------------------------------------------------.\n";
+    cout << "| 'N' or 'n'               | Transition to night              |\n";
+    cout << "| 'D' or 'd'               | Transition to day                |\n";
+    cout << "| Space                    | Stop scenery                     |\n";
+    cout << "| 'S' or 's'               | Start scenery                    |\n";
+    cout << "| 'R' or 'r'               | Restart scenery                  |\n";
+    cout << "| 'M' or 'm'               | Stop/play music                  |\n";
+    cout << "| Hold 'LEFT' Mouse        | Speed 3x                         |\n";
+    cout << "| Hold 'RIGHT' Mouse       | Speed 0.5x                       |\n";
+    cout << "| Esc                      | Exit App                         |\n";
+    cout << ".-------------------------------------------------------------.\n";
+    cout << "| GitHub Link: https://github.com/Atik471/Sea-Port-freeglut   |\n";
+    cout << ".-------------------------------------------------------------.\n";
+
+
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(1400, 750);
     glutInitWindowPosition(10, 10);
     glutCreateWindow("Sea port");
+
+    playSound("day-2.wav");
 
     myInit();
 

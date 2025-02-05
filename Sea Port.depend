@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1738494489 source:d:\7th semester\freeglut-projects\final project\sea port\main.cpp
+1738515086 source:d:\7th semester\freeglut-projects\final project\sea port\main.cpp
 	<stdlib.h>
 	<GL/freeglut.h>
 	<math.h>
@@ -881,4 +881,11 @@
 
 1526093416 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\math.h
 	<crtdefs.h>
+
+1738653568 source:d:\7th semester\freeglut-projects\final project\sea port - atik\main.cpp
+	<stdlib.h>
+	<GL/freeglut.h>
+	<math.h>
+	<iostream>
+	<mmsystem.h>
 
