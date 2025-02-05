@@ -56,11 +56,11 @@ This is a **computer graphics project** built using the **FreeGLUT** library, sh
    ```  
 3. **Compile the project** using g++:  
    ```sh  
-   g++ -o seaport seaport.cpp -lfreeglut -lopengl32 -lglu32  
+   g++ -o main main.cpp -lfreeglut -lopengl32 -lglu32  
    ```  
 4. **Run the executable**:  
    ```sh  
-   ./seaport  
+   ./main  
    ```  
 
 ## 📜 License  
