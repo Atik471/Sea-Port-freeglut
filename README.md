@@ -6,10 +6,10 @@ This is a **computer graphics project** built using the **FreeGLUT** library, sh
 ## 🖼️ Screenshots
 
 ### 🌞 Daytime Scene  
-![Daytime Scene](screenshots/day.png)
+![Daytime Scene](/screenshots/day.png)
 
 ### 🌙 Nighttime Scene  
-![Nighttime Scene](screenshots/night.png)
+![Nighttime Scene](/screenshots/night.png)
 
 ### 🌞 Daytime Scene  
 - A **crane unloads cargo** from a ship.  
