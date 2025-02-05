@@ -3,13 +3,21 @@
 ## 📜 Introduction  
 This is a **computer graphics project** built using the **FreeGLUT** library, showcasing a **sea port scenery** with interactive elements.  
 
+## 🖼️ Screenshots
+
+### 🌞 Daytime Scene  
+![Daytime Scene](screenshots/day.png)
+
+### 🌙 Nighttime Scene  
+![Nighttime Scene](screenshots/night.png)
+
 ### 🌞 Daytime Scene  
 - A **crane unloads cargo** from a ship.  
 - A lively environment with **birds, water, cloud movements and ambient sounds**. 
 
 ### 🌙 Nighttime Scene  
 - **Pirates attempt to escape** after stealing cargo.  
-- **Batman signals with ** in an engaging animated sequence.  
+- **Batman signals his presence** by lighting up his bat-signal in the sky.
 - **Beautiful starry sky** and nighttime ambiance.  
 
 🔊 The project includes **sound effects** for a more immersive experience.  
